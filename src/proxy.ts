@@ -9,7 +9,7 @@ const corsOptions = {
 };
 
 // 'request' parameter is used throughout this function
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   // handing CORS
   const origin = request.headers.get("origin") ?? "";
   const isAllowedOrigin = allowedOrigins.includes(origin);
