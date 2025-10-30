@@ -42,7 +42,7 @@
     "**/*.mts",
     ".next\\dev/types/**/*.ts",
     ".next\\dev/types/**/*.ts"
-  ],
+, "src/app/msw_init.txs"  ],
   "exclude": [
     "node_modules"
   ]

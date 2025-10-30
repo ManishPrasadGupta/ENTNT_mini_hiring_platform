@@ -1,7 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { jobsReducer } from "./features/Jobs/jobsSlice";
 
 export const store = configureStore({
-  reducer: {},
+  reducer: {
+    jobs: jobsReducer,
+  },
   devTools: process.env.NODE_ENV !== "production",
 });
 
