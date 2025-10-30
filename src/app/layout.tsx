@@ -5,6 +5,7 @@ import { ReactNode } from "react";
 import SidebarWrapper from "@/lib/utils/sidebarWrapper";
 import ReduxProvider from "@/providers/ReduxProvider";
 import { MSWInit } from "./msw_init";
+import ClientSeedProvider from "@/lib/utils/clientSeedProvider";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -12,9 +13,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body className="h-full w-full bg-white">
         <MSWInit />
         <ReduxProvider>
-          <Theme>
-            <SidebarWrapper>{children}</SidebarWrapper>
-          </Theme>
+          <ClientSeedProvider>
+            <Theme>
+              <SidebarWrapper>{children}</SidebarWrapper>
+            </Theme>
+          </ClientSeedProvider>
         </ReduxProvider>
       </body>
     </html>
