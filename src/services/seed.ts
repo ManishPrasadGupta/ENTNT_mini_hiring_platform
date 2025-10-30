@@ -1,6 +1,13 @@
 import { db } from "./db";
-import { Job, JobStatus, JobType } from "@/types/types";
+import {
+  Candidate,
+  CandidateStage,
+  Job,
+  JobStatus,
+  JobType,
+} from "@/types/types";
 import { nanoid } from "nanoid";
+import { faker } from "@faker-js/faker";
 
 // Example tags, requirements, locations, and types
 const tagsList = [
@@ -45,4 +52,34 @@ export async function seedJobsIfEmpty() {
     });
     await db.jobs.bulkAdd(jobs);
   }
+}
+
+export async function seedCandidates(count = 1000) {
+  const stages: CandidateStage[] = [
+    "applied",
+    "screen",
+    "tech",
+    "offer",
+    "hired",
+    "rejected",
+  ];
+  const candidates: Candidate[] = [];
+
+  for (let i = 0; i < count; i++) {
+    const stage = faker.helpers.arrayElement(stages);
+    candidates.push({
+      id: faker.string.uuid(),
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      stage,
+      jobId: faker.string.uuid(),
+      phone: faker.phone.number(),
+      resume: "",
+      notes: "",
+      createdAt: faker.date.past().toISOString(),
+      updatedAt: faker.date.recent().toISOString(),
+    });
+  }
+  await db.candidates.bulkAdd(candidates);
+  console.log(`${count} candidates seeded.`);
 }

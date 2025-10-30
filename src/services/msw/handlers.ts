@@ -1,6 +1,6 @@
 import { http, HttpResponse } from "msw";
 import { db } from "../db";
-import { Job } from "@/types/types";
+import { Candidate, Job } from "@/types/types";
 
 // Artificial delay for realism
 function randomDelay() {
@@ -25,7 +25,6 @@ export const handlers = [
     const sort = url.searchParams.get("sort") || "order";
 
     let collection = await db.jobs.toArray();
-    console.log("Initial jobs collection:", collection);
 
     // Apply search filter
     if (search) {
@@ -167,5 +166,155 @@ export const handlers = [
       return HttpResponse.json({ message: "Job not found" }, { status: 404 });
     }
     return HttpResponse.json(job);
+  }),
+
+  // ###### candiates handlers ########
+  // GET /candidates?search=&stage=&page=
+  http.get("/candidates", async ({ request }) => {
+    await randomDelay();
+    const url = new URL(request.url);
+    const search = url.searchParams.get("search") || "";
+    const stage = url.searchParams.get("stage");
+    const page = parseInt(url.searchParams.get("page") || "1", 10);
+    const pageSize = parseInt(url.searchParams.get("pageSize") || "20", 10);
+
+    let collection = await db.candidates.toArray();
+
+    // Client-side search (name/email)
+    if (search) {
+      const q = search.toLowerCase();
+      collection = collection.filter(
+        (c) =>
+          c.name.toLowerCase().includes(q) ||
+          (c.email && c.email.toLowerCase().includes(q))
+      );
+    }
+
+    // Filter by stage
+    if (stage && stage !== "all") {
+      collection = collection.filter((c) => c.stage === stage);
+    }
+
+    // Sort by createdAt desc
+    collection = collection.sort((a, b) =>
+      a.createdAt < b.createdAt ? 1 : -1
+    );
+
+    const total = collection.length;
+    const paged = collection.slice((page - 1) * pageSize, page * pageSize);
+
+    return HttpResponse.json({ candidates: paged, total });
+  }),
+
+  // POST /candidates
+  http.post("/candidates", async ({ request }) => {
+    await randomDelay();
+    const data = await request.json();
+
+    if (
+      !data ||
+      typeof data !== "object" ||
+      !data.name ||
+      !data.email ||
+      !data.stage
+    ) {
+      return HttpResponse.json(
+        { message: "Invalid candidate body" },
+        { status: 400 }
+      );
+    }
+
+    const now = new Date().toISOString();
+    const candidate: Candidate = {
+      id: data.id || crypto.randomUUID(),
+      name: data.name,
+      email: data.email,
+      phone: data.phone ?? "",
+      resume: data.resume ?? "",
+      jobId: data.jobId ?? "",
+      stage: data.stage,
+      notes: data.notes ?? "",
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    await db.candidates.add(candidate);
+
+    // Add timeline entry for creation
+    await db.candidateTimelines.add({
+      candidateId: candidate.id,
+      timestamp: now,
+      stage: candidate.stage,
+      by: "System",
+      note: "Applied",
+    });
+
+    return HttpResponse.json(candidate, { status: 201 });
+  }),
+
+  // GET /candidates/:id/timeline
+  http.get("/candidates/:id/timeline", async ({ params }) => {
+    await randomDelay();
+    const id = params.id as string;
+    const timeline = await db.candidateTimelines
+      .where("candidateId")
+      .equals(id)
+      .sortBy("timestamp");
+    return HttpResponse.json({ timeline });
+  }),
+
+  // PATCH /candidates/:id (stage transition, note, etc.)
+  http.patch("/candidates/:id", async ({ params, request }) => {
+    await randomDelay();
+    const id = params.id as string;
+    const data = await request.json();
+
+    if (!data || typeof data !== "object") {
+      return HttpResponse.json(
+        { message: "Invalid update body" },
+        { status: 400 }
+      );
+    }
+
+    const updateFields: Partial<Candidate> = {
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      resume: data.resume,
+      jobId: data.jobId,
+      notes: data.notes,
+      stage: data.stage,
+      updatedAt: new Date().toISOString(),
+    };
+
+    await db.candidates.update(id, updateFields);
+    const updated = await db.candidates.get(id);
+
+    // If stage changed, add timeline entry
+    if (data.stage) {
+      await db.candidateTimelines.add({
+        candidateId: id,
+        timestamp: new Date().toISOString(),
+        stage: data.stage,
+        by: data.by || "System",
+        note: data.timelineNote || "",
+      });
+    }
+
+    return HttpResponse.json(updated);
+  }),
+
+  // GET /candidates/:id
+  http.get("/candidates/:id", async ({ params }) => {
+    await randomDelay();
+    const id = params.id as string;
+    const candidate = await db.candidates.get(id);
+    if (!candidate) {
+      return HttpResponse.json(
+        { message: "Candidate not found" },
+        { status: 404 }
+      );
+    }
+    return HttpResponse.json(candidate);
   }),
 ];

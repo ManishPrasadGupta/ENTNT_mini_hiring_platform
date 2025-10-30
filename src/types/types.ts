@@ -25,3 +25,34 @@ export type CreateJobFields = {
   requirements?: string[];
   tags: string[];
 };
+
+// candidates
+export type CandidateStage =
+  | "applied"
+  | "screen"
+  | "tech"
+  | "offer"
+  | "hired"
+  | "rejected";
+
+export interface Candidate {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  stage: CandidateStage;
+  jobId: string;
+  resume?: string;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CandidateTimelineEntry {
+  timestamp: string;
+  stage: CandidateStage;
+  fromStage?: CandidateStage;
+  by: string; // user
+  note?: string;
+  candidateId: string;
+}
