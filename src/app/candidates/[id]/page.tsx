@@ -30,10 +30,18 @@ export default function CandidateDetailsPage() {
     });
   }, [dispatch, id]);
 
-  if (!candidate) return <div>Loading...</div>;
+  if (!candidate)
+    return (
+      <div className="flex justify-center items-center min-h-screen text-emerald-700 text-lg font-semibold">
+        Loading...
+      </div>
+    );
 
   return (
     <div className="max-w-5xl mx-auto pt-8">
+      <h1 className="text-3xl font-bold text-emerald-700 mb-6">
+        Candidate Details
+      </h1>
       <CandidateDetail
         candidate={candidate}
         timeline={timeline}

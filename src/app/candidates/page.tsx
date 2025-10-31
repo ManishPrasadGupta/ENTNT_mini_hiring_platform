@@ -71,10 +71,10 @@ export default function CandidatesPage() {
 
   return (
     <div className="max-w-4xl mx-auto pt-8">
-      <h1 className="text-3xl font-bold mb-1 flex items-center justify-between">
+      <h1 className="text-3xl font-bold mb-1 flex items-center justify-between text-emerald-700">
         <span>Candidates</span>
         <button
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-semibold"
+          className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow focus:outline-none focus:ring-2 focus:ring-emerald-300 transition"
           onClick={() => setShowModal(true)}
         >
           + Create Candidate

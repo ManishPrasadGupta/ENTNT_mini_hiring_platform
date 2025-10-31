@@ -13,12 +13,13 @@ function getInitials(name: string) {
     .slice(0, 2);
 }
 
+// Emerald-themed stage colors for consistency
 const stageColors: Record<CandidateStage, string> = {
-  applied: "bg-blue-100 text-blue-700",
-  screen: "bg-yellow-100 text-yellow-700",
-  tech: "bg-purple-100 text-purple-700",
-  offer: "bg-green-100 text-green-700",
-  hired: "bg-green-100 text-green-700",
+  applied: "bg-emerald-50 text-emerald-700",
+  screen: "bg-emerald-100 text-emerald-800",
+  tech: "bg-emerald-200 text-emerald-900",
+  offer: "bg-emerald-100 text-emerald-700",
+  hired: "bg-emerald-200 text-emerald-800",
   rejected: "bg-red-100 text-red-700",
 };
 
@@ -32,9 +33,9 @@ export default function CandidatesCard({
   onView,
 }: CandidatesCardProps) {
   return (
-    <div className="flex items-center gap-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-100 px-4 py-3 mb-2">
+    <div className="flex items-center gap-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow border border-emerald-100 px-4 py-3 mb-2">
       {/* Avatar */}
-      <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-base font-bold text-gray-500">
+      <div className="w-9 h-9 rounded-full bg-emerald-100 flex items-center justify-center text-base font-bold text-emerald-700">
         {getInitials(candidate.name)}
       </div>
       {/* Info */}
@@ -50,7 +51,7 @@ export default function CandidatesCard({
         </div>
         <div className="flex items-center gap-2 mt-0.5">
           <span
-            className={`px-2 py-0.5 rounded text-xs font-medium ${stageColors[candidate.stage] || "bg-gray-100 text-gray-500"}`}
+            className={`px-2 py-0.5 rounded text-xs font-medium capitalize ${stageColors[candidate.stage] || "bg-gray-100 text-gray-500"}`}
           >
             {candidate.stage}
           </span>
@@ -58,7 +59,7 @@ export default function CandidatesCard({
       </div>
       {/* Actions */}
       <button
-        className="text-gray-300 hover:text-gray-700 p-1 rounded"
+        className="text-emerald-300 hover:text-emerald-600 p-1 rounded transition-colors"
         aria-label="View"
         onClick={() => onView?.(candidate.id)}
       >

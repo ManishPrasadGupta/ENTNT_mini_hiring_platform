@@ -29,7 +29,7 @@ export default function CreateJobModal({
   const requirementInputRef = useRef<HTMLInputElement>(null);
   const tagInputRef = useRef<HTMLInputElement>(null);
 
-  // Modern transition logic: fade/slide modal in/out
+  // Preload form data for edit mode, reset on close
   useEffect(() => {
     if (initialData && isEditMode) {
       setTitle(initialData.title || "");
@@ -136,24 +136,24 @@ export default function CreateJobModal({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-black/40 transition-opacity duration-300 ${backdropClass}`}
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-emerald-900/40 transition-opacity duration-300 ${backdropClass}`}
       aria-modal="true"
       role="dialog"
       style={{ transitionProperty: "opacity" }}
     >
       <div
-        className={`relative bg-linear-to-br from-white via-blue-50 to-blue-100 px-7 py-8 rounded-3xl shadow-2xl border w-full max-w-md transition-all duration-300 ${modalClass}`}
+        className={`relative bg-linear-to-br from-white via-emerald-50 to-emerald-100 px-7 py-8 rounded-3xl shadow-2xl border w-full max-w-md transition-all duration-300 ${modalClass}`}
         style={{ transitionProperty: "opacity, transform" }}
       >
         <button
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 rounded-full p-2 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300"
+          className="absolute top-4 right-4 text-emerald-400 hover:text-emerald-700 rounded-full p-2 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-300"
           onClick={onClose}
           aria-label="Close"
           type="button"
         >
           <X className="w-6 h-6" />
         </button>
-        <h2 className="mb-7 text-3xl font-bold tracking-tight text-gray-800 text-center uppercase letter-spacing-wide">
+        <h2 className="mb-7 text-3xl font-bold tracking-tight text-emerald-700 text-center uppercase letter-spacing-wide">
           {isEditMode ? "Edit Job" : "Create Job"}
         </h2>
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -162,7 +162,7 @@ export default function CreateJobModal({
               Title <span className="text-red-500">*</span>
             </label>
             <input
-              className="w-full border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-lg p-3 text-lg transition disabled:opacity-50"
+              className="w-full border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 rounded-lg p-3 text-lg transition disabled:opacity-50"
               placeholder="e.g., Frontend Developer"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -175,7 +175,7 @@ export default function CreateJobModal({
               Description
             </label>
             <textarea
-              className="w-full border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-lg p-3 min-h-20 text-base transition"
+              className="w-full border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 rounded-lg p-3 min-h-20 text-base transition"
               placeholder="Describe the job..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -187,7 +187,7 @@ export default function CreateJobModal({
                 Location
               </label>
               <input
-                className="w-full border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-lg p-3 text-base transition"
+                className="w-full border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 rounded-lg p-3 text-base transition"
                 placeholder="e.g., Remote, New York"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
@@ -198,7 +198,7 @@ export default function CreateJobModal({
                 Type
               </label>
               <select
-                className="w-full border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-lg p-3 text-base transition"
+                className="w-full border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 rounded-lg p-3 text-base transition"
                 value={type}
                 onChange={(e) => setType(e.target.value as JobType)}
               >
@@ -215,7 +215,7 @@ export default function CreateJobModal({
                 Status
               </label>
               <select
-                className="w-full border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-lg p-3 text-base transition"
+                className="w-full border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 rounded-lg p-3 text-base transition"
                 value={status}
                 onChange={(e) => setStatus(e.target.value as JobStatus)}
               >
@@ -229,7 +229,7 @@ export default function CreateJobModal({
               </label>
               <div className="flex">
                 <input
-                  className="flex-1 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-l-lg p-3 text-base transition"
+                  className="flex-1 border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 rounded-l-lg p-3 text-base transition"
                   placeholder="e.g, remote"
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
@@ -238,7 +238,7 @@ export default function CreateJobModal({
                 />
                 <button
                   type="button"
-                  className="bg-blue-500 hover:bg-blue-600 text-white rounded-r-lg px-4"
+                  className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-r-lg px-4 transition"
                   onClick={handleAddTag}
                   tabIndex={-1}
                 >
@@ -249,16 +249,16 @@ export default function CreateJobModal({
                 {tags.map((tag) => (
                   <span
                     key={tag}
-                    className="inline-flex items-center bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-xs font-medium"
+                    className="inline-flex items-center bg-emerald-100 text-emerald-800 rounded-full px-3 py-1 text-xs font-medium"
                   >
                     {tag}
                     <button
                       type="button"
-                      className="ml-2 text-blue-500 hover:text-blue-700 focus:outline-none"
+                      className="ml-2 text-emerald-500 hover:text-emerald-700 focus:outline-none"
                       onClick={() => handleRemoveTag(tag)}
                       aria-label={`Remove ${tag}`}
                     >
-                      x
+                      ×
                     </button>
                   </span>
                 ))}
@@ -271,7 +271,7 @@ export default function CreateJobModal({
             </label>
             <div className="flex">
               <input
-                className="flex-1 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-l-lg p-3 text-base transition"
+                className="flex-1 border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 rounded-l-lg p-3 text-base transition"
                 placeholder="e.g., 3+ years experience"
                 value={requirementInput}
                 onChange={(e) => setRequirementInput(e.target.value)}
@@ -280,7 +280,7 @@ export default function CreateJobModal({
               />
               <button
                 type="button"
-                className="bg-blue-500 hover:bg-blue-600 text-white rounded-r-lg px-4"
+                className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-r-lg px-4 transition"
                 onClick={handleAddRequirement}
                 tabIndex={-1}
               >
@@ -291,12 +291,12 @@ export default function CreateJobModal({
               {requirements.map((req) => (
                 <span
                   key={req}
-                  className="inline-flex items-center bg-green-100 text-green-800 rounded-full px-3 py-1 text-xs font-medium"
+                  className="inline-flex items-center bg-emerald-100 text-emerald-800 rounded-full px-3 py-1 text-xs font-medium"
                 >
                   {req}
                   <button
                     type="button"
-                    className="ml-2 text-green-500 hover:text-green-700 focus:outline-none"
+                    className="ml-2 text-emerald-500 hover:text-emerald-700 focus:outline-none"
                     onClick={() => handleRemoveRequirement(req)}
                     aria-label={`Remove ${req}`}
                   >
@@ -309,7 +309,7 @@ export default function CreateJobModal({
           <div className="flex justify-end mt-8">
             <button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-10 py-3 rounded-xl font-semibold shadow-lg text-lg transition-all duration-200"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white px-10 py-3 rounded-xl font-semibold shadow-lg text-lg transition-all duration-200"
             >
               {isEditMode ? "Update" : "Create"}
             </button>

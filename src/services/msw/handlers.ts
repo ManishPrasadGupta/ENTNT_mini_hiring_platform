@@ -342,7 +342,9 @@ export const handlers = [
   // GET /assessments/:jobId
   http.get("/assessments/:jobId", async ({ params }) => {
     const jobId = params.jobId as string;
+    console.log("Fetching assessment for jobId(handler):", jobId);
     const assessment = await db.assessments.where({ jobId }).first();
+    console.log("Fetched assessment by jobId(handler):", assessment);
     if (!assessment) {
       return HttpResponse.json(
         { message: "Assessment not found" },
@@ -356,6 +358,7 @@ export const handlers = [
   http.put("/assessments/:jobId", async ({ params, request }) => {
     const jobId = params.jobId as string;
     const data = (await request.json()) as Partial<Assessment>;
+    // console.log("Received assessment data to save:", data);
 
     let assessment = await db.assessments.where({ jobId }).first();
 

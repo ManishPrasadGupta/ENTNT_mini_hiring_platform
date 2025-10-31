@@ -18,7 +18,6 @@ export default function AssessmentsPage() {
     (state: RootState) => state.assessments
   );
 
-  console.log("Assessments", assessments.slice(0, 5));
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -34,17 +33,21 @@ export default function AssessmentsPage() {
       )
     : [];
 
-  console.log("Filtered", filtered);
   return (
     <div className="max-w-5xl mx-auto py-8">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-3xl font-bold mb-1">Assessments</h1>
+          <h1 className="text-3xl font-bold mb-1 text-emerald-700">
+            Assessments
+          </h1>
           <div className="text-gray-500">
             Build and manage job-specific assessments and quizzes
           </div>
         </div>
-        <button className="bg-gray-900 text-white rounded px-4 py-2 hover:bg-gray-700">
+        <button
+          className="bg-emerald-600 text-white rounded-lg px-5 py-2 font-medium shadow hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-300 transition"
+          onClick={() => router.push("/assessments/new")}
+        >
           + New Assessment
         </button>
       </div>
@@ -52,17 +55,19 @@ export default function AssessmentsPage() {
 
       {/* Dashboard stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div className="bg-blue-50 rounded-lg p-4 flex items-center gap-4">
+        <div className="bg-emerald-50 rounded-xl p-4 flex items-center gap-4 shadow-sm border border-emerald-100">
           <span className="text-3xl">📋</span>
           <div>
-            <div className="font-bold text-lg">{assessments.length}</div>
+            <div className="font-bold text-lg text-emerald-800">
+              {assessments.length}
+            </div>
             <div className="text-gray-500 text-sm">Total Assessments</div>
           </div>
         </div>
-        <div className="bg-green-50 rounded-lg p-4 flex items-center gap-4">
+        <div className="bg-emerald-100 rounded-xl p-4 flex items-center gap-4 shadow-sm border border-emerald-200">
           <span className="text-3xl">💼</span>
           <div>
-            <div className="font-bold text-lg">
+            <div className="font-bold text-lg text-emerald-800">
               {Array.isArray(assessments)
                 ? [...new Set(assessments.map((a) => a.jobId))].length
                 : 0}
@@ -70,10 +75,10 @@ export default function AssessmentsPage() {
             <div className="text-gray-500 text-sm">Active Jobs</div>
           </div>
         </div>
-        <div className="bg-purple-50 rounded-lg p-4 flex items-center gap-4">
+        <div className="bg-white rounded-xl p-4 flex items-center gap-4 shadow-sm border border-emerald-100">
           <span className="text-3xl">👁️</span>
           <div>
-            <div className="font-bold text-lg">
+            <div className="font-bold text-lg text-emerald-700">
               {Array.isArray(assessments)
                 ? assessments.reduce(
                     (acc, a) => acc + (a.responsesCount || 0),

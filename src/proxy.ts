@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// configuration for the CORS middleware
 const allowedOrigins = ["https://acme.com", "https://my-app.org"];
 const corsOptions = {
   "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
@@ -8,9 +7,7 @@ const corsOptions = {
   "Access-Control-Allow-Credentials": "true",
 };
 
-// 'request' parameter is used throughout this function
 export function proxy(request: NextRequest) {
-  // handing CORS
   const origin = request.headers.get("origin") ?? "";
   const isAllowedOrigin = allowedOrigins.includes(origin);
   const isPreflight = request.method === "OPTIONS";
@@ -21,11 +18,6 @@ export function proxy(request: NextRequest) {
       ...corsOptions,
     };
     return NextResponse.json({}, { headers: preflightHeaders });
-  }
-
-  // Check and delete a cookie
-  if (request.cookies.has("nextjs")) {
-    request.cookies.delete("nextjs");
   }
 
   // --- Headers Setup ---
@@ -61,12 +53,7 @@ export function proxy(request: NextRequest) {
   response.headers.set("Cache-Control", "public, max-age=604800");
 
   // --- Cookie on Response ---
-  response.cookies.set("vercel", "fast");
-  response.cookies.set({
-    name: "vercel",
-    value: "fast",
-    path: "/",
-  });
+  response.cookies.set("vercel", "fast", { path: "/" });
 
   // --- Response Header ---
   response.headers.set("x-hello-from-middleware2", "hello");

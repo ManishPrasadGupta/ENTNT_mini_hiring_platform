@@ -18,6 +18,7 @@ type CreateCandidateModalProps = {
   onSubmit: (candidate: {
     name: string;
     email: string;
+    phone: string;
     stage: CandidateStage;
   }) => Promise<void> | void;
   submitting?: boolean;
@@ -38,6 +39,7 @@ export default function CreateCandidateModal({
     stage: "applied" as CandidateStage,
   });
 
+  // Reset form when modal closes
   if (
     !open &&
     (form.name || form.email || form.phone || form.stage !== "applied")
@@ -49,8 +51,10 @@ export default function CreateCandidateModal({
 
   return (
     <div className="fixed z-50 inset-0 bg-black bg-opacity-30 flex justify-center items-center">
-      <div className="bg-white rounded-lg shadow-lg p-6 w-[94vw] max-w-md">
-        <h2 className="text-xl font-bold mb-4">Create Candidate</h2>
+      <div className="bg-white rounded-2xl shadow-2xl p-7 w-[94vw] max-w-md border border-emerald-100">
+        <h2 className="text-2xl font-extrabold text-emerald-700 mb-4 text-center">
+          Create Candidate
+        </h2>
         <form
           onSubmit={async (e) => {
             e.preventDefault();
@@ -59,43 +63,49 @@ export default function CreateCandidateModal({
           className="space-y-4"
         >
           <div>
-            <label className="block mb-1 font-medium">Name</label>
+            <label className="block mb-1 font-medium text-gray-700">Name</label>
             <input
               type="text"
               value={form.name}
               required
-              className="w-full border rounded px-3 py-2"
+              className="w-full border border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 rounded-lg px-3 py-2 transition"
               onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
             />
           </div>
           <div>
-            <label className="block mb-1 font-medium">Email</label>
+            <label className="block mb-1 font-medium text-gray-700">
+              Email
+            </label>
             <input
               type="email"
               value={form.email}
               required
-              className="w-full border rounded px-3 py-2"
+              className="w-full border border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 rounded-lg px-3 py-2 transition"
               onChange={(e) =>
                 setForm((f) => ({ ...f, email: e.target.value }))
               }
             />
           </div>
           <div>
-            <label className="block mb-1 font-medium">Phone </label>
+            <label className="block mb-1 font-medium text-gray-700">
+              Phone
+            </label>
             <input
               type="tel"
               value={form.phone}
               required
-              className="w-full border rounded px-3 py-2"
+              className="w-full border border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 rounded-lg px-3 py-2 transition"
               onChange={(e) =>
                 setForm((f) => ({ ...f, phone: e.target.value }))
               }
             />
           </div>
           <div>
-            <label className="block mb-1 font-medium">Stage</label>
+            <label className="block mb-1 font-medium text-gray-700">
+              Stage
+            </label>
             <select
-              className="w-full border rounded px-3 py-2"
+              className="w-full border border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 rounded-lg px-3 py-2 transition"
               value={form.stage}
               onChange={(e) =>
                 setForm((f) => ({
@@ -111,11 +121,11 @@ export default function CreateCandidateModal({
               ))}
             </select>
           </div>
-          {error && <div className="text-red-500">{error}</div>}
+          {error && <div className="text-red-500 text-sm">{error}</div>}
           <div className="flex justify-between gap-2 pt-1">
             <button
               type="button"
-              className="px-4 py-2 rounded bg-gray-100 hover:bg-gray-200"
+              className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium transition"
               onClick={onClose}
               disabled={submitting}
             >
@@ -123,7 +133,7 @@ export default function CreateCandidateModal({
             </button>
             <button
               type="submit"
-              className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+              className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition disabled:opacity-70"
               disabled={submitting}
             >
               {submitting ? "Creating..." : "Create"}

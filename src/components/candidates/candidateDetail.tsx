@@ -54,7 +54,7 @@ export default function CandidateDetail({
   return (
     <div className="flex flex-col gap-8">
       <button
-        className="flex items-center gap-2 text-sm text-gray-600 hover:underline mb-2"
+        className="flex items-center gap-2 text-sm text-emerald-700 hover:underline mb-2"
         onClick={onBack}
       >
         ← Back to Candidates
@@ -65,13 +65,13 @@ export default function CandidateDetail({
           {/* Profile */}
           <div className="bg-white rounded-xl p-6 shadow border">
             <div className="flex items-center gap-5">
-              <div className="w-16 h-16 rounded-full bg-gray-800 text-white flex items-center justify-center text-2xl font-bold">
+              <div className="w-16 h-16 rounded-full bg-emerald-700 text-white flex items-center justify-center text-2xl font-bold">
                 {getInitials(candidate.name)}
               </div>
               <div>
                 <div className="text-2xl font-semibold">{candidate.name}</div>
                 <div className="flex items-center gap-2 mt-1">
-                  <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold capitalize">
+                  <span className="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold capitalize">
                     {stageLabels[candidate.stage]}
                   </span>
                 </div>
@@ -94,7 +94,7 @@ export default function CandidateDetail({
           <div className="bg-white rounded-xl p-6 shadow border">
             <div className="font-semibold text-lg mb-2">Update Stage</div>
             <select
-              className="w-full border rounded px-3 py-2 mb-3"
+              className="w-full border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 rounded px-3 py-2 mb-3 transition"
               value={stage}
               onChange={(e) => setStage(e.target.value as CandidateStage)}
             >
@@ -105,14 +105,14 @@ export default function CandidateDetail({
               ))}
             </select>
             <textarea
-              className="w-full border rounded px-3 py-2 mb-3"
+              className="w-full border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 rounded px-3 py-2 mb-3 transition"
               placeholder="Add a note about this stage change (optional)..."
               value={stageNote}
               onChange={(e) => setStageNote(e.target.value)}
               rows={3}
             />
             <button
-              className="w-full bg-gray-400 text-white font-semibold py-2 rounded disabled:opacity-50"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 rounded-lg transition disabled:opacity-50"
               onClick={() => {
                 onUpdateStage(stage, stageNote);
                 setStageNote("");
@@ -126,14 +126,14 @@ export default function CandidateDetail({
           <div className="bg-white rounded-xl p-6 shadow border">
             <div className="font-semibold text-lg mb-2">Add Note</div>
             <textarea
-              className="w-full border rounded px-3 py-2 mb-3"
+              className="w-full border-emerald-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 rounded px-3 py-2 mb-3 transition"
               placeholder="Add a note... Use @username to mention team members"
               value={note}
               onChange={(e) => setNote(e.target.value)}
               rows={3}
             />
             <button
-              className="w-full bg-gray-400 text-white font-semibold py-2 rounded disabled:opacity-50 flex items-center gap-2 justify-center"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 rounded-lg disabled:opacity-50 flex items-center gap-2 justify-center transition"
               onClick={() => {
                 onAddNote(note);
                 setNote("");
@@ -145,7 +145,7 @@ export default function CandidateDetail({
           </div>
         </div>
         {/* Right: Timeline */}
-        <div className="bg-gray-50 rounded-xl p-6 shadow border flex-1">
+        <div className="bg-emerald-50 rounded-xl p-6 shadow border flex-1">
           <div className="font-semibold text-lg mb-4">Timeline</div>
           <div className="space-y-6">
             {sortedTimeline.map((entry, i) => (
@@ -157,13 +157,13 @@ export default function CandidateDetail({
                   {entry.stage && (
                     <>
                       {entry.fromStage && (
-                        <span className="bg-gray-200 text-gray-800 px-2 py-0.5 rounded text-xs mx-1">
+                        <span className="bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded text-xs mx-1">
                           {stageLabels[entry.fromStage as CandidateStage] ||
                             entry.fromStage}
                         </span>
                       )}
                       <span>→</span>
-                      <span className="bg-gray-200 text-gray-800 px-2 py-0.5 rounded text-xs mx-1">
+                      <span className="bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded text-xs mx-1">
                         {stageLabels[entry.stage as CandidateStage] ||
                           entry.stage}
                       </span>

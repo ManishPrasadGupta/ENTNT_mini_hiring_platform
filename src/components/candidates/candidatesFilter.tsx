@@ -36,7 +36,7 @@ export default function CandidatesFilter({
       <div className="flex-1">
         <input
           type="text"
-          className="w-full border border-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-200 transition"
+          className="w-full border border-emerald-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 transition placeholder:text-gray-400"
           placeholder="Search candidates by name or email..."
           value={search}
           onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -47,7 +47,7 @@ export default function CandidatesFilter({
       {/* Stage Filter */}
       <div>
         <select
-          className="border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 transition"
+          className="border border-emerald-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 transition cursor-pointer"
           value={stage}
           onChange={(e: ChangeEvent<HTMLSelectElement>) =>
             onStageChange(e.target.value as CandidateStage | "all")
@@ -64,20 +64,20 @@ export default function CandidatesFilter({
       <div className="flex gap-1 ml-auto">
         <button
           onClick={() => onViewChange("list")}
-          className={`px-4 py-2 rounded transition border ${
+          className={`px-4 py-2 rounded transition border font-medium ${
             view === "list"
-              ? "bg-blue-900 text-white border-blue-900"
-              : "bg-white text-gray-800 border-gray-200"
+              ? "bg-emerald-700 text-white border-emerald-700 shadow"
+              : "bg-white text-gray-800 border-emerald-200 hover:bg-emerald-50"
           }`}
         >
           List
         </button>
         <button
           onClick={() => onViewChange("kanban")}
-          className={`px-4 py-2 rounded transition border ${
+          className={`px-4 py-2 rounded transition border font-medium ${
             view === "kanban"
-              ? "bg-blue-900 text-white border-blue-900"
-              : "bg-white text-gray-800 border-gray-200"
+              ? "bg-emerald-700 text-white border-emerald-700 shadow"
+              : "bg-white text-gray-800 border-emerald-200 hover:bg-emerald-50"
           }`}
         >
           Kanban

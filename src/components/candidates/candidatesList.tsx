@@ -34,9 +34,9 @@ export default function CandidatesList({
           : `Showing ${candidates.length}${total ? ` of ${total}` : ""} candidate${candidates.length !== 1 ? "s" : ""}`}
       </div>
       {/* List */}
-      <div className="bg-gray-50 rounded-xl p-6 max-h-[60vh] overflow-y-auto">
+      <div className="bg-emerald-50 rounded-xl p-6 max-h-[60vh] overflow-y-auto border border-emerald-100">
         {candidates.length === 0 && !isLoading && (
-          <div className="text-center text-gray-400 py-12">
+          <div className="text-center text-emerald-300 py-12">
             No candidates found.
           </div>
         )}
@@ -52,17 +52,17 @@ export default function CandidatesList({
       {totalPages > 1 && (
         <div className="flex justify-center items-center gap-4 mt-4">
           <button
-            className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200"
+            className="px-3 py-1 rounded bg-emerald-100 hover:bg-emerald-200 text-emerald-800 disabled:opacity-50 disabled:cursor-not-allowed transition"
             disabled={page <= 1}
             onClick={() => onPageChange(page - 1)}
           >
             Previous
           </button>
-          <span>
+          <span className="text-emerald-700">
             Page {page} of {totalPages}
           </span>
           <button
-            className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200"
+            className="px-3 py-1 rounded bg-emerald-100 hover:bg-emerald-200 text-emerald-800 disabled:opacity-50 disabled:cursor-not-allowed transition"
             disabled={page >= totalPages}
             onClick={() => onPageChange(page + 1)}
           >

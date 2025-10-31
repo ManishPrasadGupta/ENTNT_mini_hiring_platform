@@ -27,12 +27,12 @@ export default function CandidatesKanban({
         const list = candidates.filter((c) => c.stage === stage.key);
         return (
           <div key={stage.key} className="w-72 shrink-0">
-            <div className="font-semibold text-lg mb-2 text-center">
+            <div className="font-semibold text-lg mb-2 text-center text-emerald-700">
               {stage.label}
             </div>
-            <div className="bg-gray-100 rounded-xl min-h-[100px] p-2">
+            <div className="bg-emerald-50 rounded-xl min-h-[100px] p-2 border border-emerald-100">
               {list.length === 0 ? (
-                <div className="text-gray-400 text-center py-4">
+                <div className="text-emerald-300 text-center py-4">
                   No candidates
                 </div>
               ) : (

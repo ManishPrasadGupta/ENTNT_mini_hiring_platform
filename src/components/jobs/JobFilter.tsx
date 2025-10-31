@@ -33,16 +33,16 @@ export default function JobFilter({
   }, [search, status, onChange]);
 
   return (
-    <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4 mb-6">
+    <div className="flex flex-col md:flex-row items-center gap-2 md:gap-4 mb-6 w-full">
       <input
         type="text"
-        className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-200 transition"
+        className="flex-1 border border-emerald-200 rounded-lg px-4 py-2 shadow-sm bg-white focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 transition placeholder:text-gray-400"
         placeholder="Search jobs..."
         value={search}
         onChange={handleSearchChange}
       />
       <select
-        className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-200 transition"
+        className="border border-emerald-200 rounded-lg px-3 py-2 shadow-sm bg-white focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 transition cursor-pointer"
         value={status}
         onChange={handleStatusChange}
       >

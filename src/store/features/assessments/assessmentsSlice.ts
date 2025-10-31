@@ -16,7 +16,6 @@ interface AssessmentsState {
   assessments: AssessmentDashboardItem[];
   loading: boolean;
   error: string | null;
-  // For builder/details
   currentAssessment: Assessment | null;
   submitting: boolean;
   submitError: string | null;

@@ -14,7 +14,7 @@ export const fetchAssessments = createAsyncThunk<AssessmentDashboardItem[]>(
   async (_, { rejectWithValue }) => {
     try {
       const res = await assessmentsApi.getAssessments();
-      console.log("Fetched assessments:", res.data);
+      // console.log("Fetched assessments:", res.data);
 
       return res.data;
     } catch (error: any) {
@@ -29,6 +29,7 @@ export const fetchAssessmentByJobId = createAsyncThunk<Assessment, string>(
   async (jobId, { rejectWithValue }) => {
     try {
       const res = await assessmentsApi.getAssessmentByJobId(jobId);
+      console.log("Fetched assessment by jobId:", res.data);
       return res.data;
     } catch (error: any) {
       return rejectWithValue(error.message || "Failed to fetch assessment");

@@ -25,15 +25,15 @@ export default function JobsPage() {
   };
   return (
     <main className="p-8">
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center justify-between mb-4">
         <div>
-          <h1 className="text-3xl font-bold">Jobs</h1>
+          <h1 className="text-3xl font-bold text-emerald-700">Jobs</h1>
           <p className="text-gray-600">
             Manage job postings and track applications
           </p>
         </div>
         <button
-          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="flex items-center px-5 py-2 bg-black text-white rounded-lg shadow font-semibold hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-300 transition"
           onClick={() => setOpen(true)}
         >
           <Plus className="w-5 h-5 mr-2" /> Create Job
