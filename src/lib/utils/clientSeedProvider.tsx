@@ -1,7 +1,11 @@
 "use client";
 
 import { db } from "@/services/db";
-import { seedCandidates } from "@/services/seed";
+import {
+  seedAssessments,
+  seedCandidates,
+  seedJobsIfEmpty,
+} from "@/services/seed";
 import { useEffect } from "react";
 
 export default function ClientSeedProvider({
@@ -10,13 +14,18 @@ export default function ClientSeedProvider({
   children: React.ReactNode;
 }) {
   useEffect(() => {
-    async function maybeSeedCandidates() {
-      const count = await db.candidates.count();
-      if (count === 0) {
+    async function maybeSeedAll() {
+      if ((await db.jobs.count()) === 0) {
+        await seedJobsIfEmpty();
+      }
+      if ((await db.candidates.count()) === 0) {
         await seedCandidates(1000);
       }
+      if ((await db.assessments.count()) === 0) {
+        await seedAssessments();
+      }
     }
-    maybeSeedCandidates();
+    maybeSeedAll();
   }, []);
 
   return <>{children}</>;
