@@ -56,3 +56,50 @@ export interface CandidateTimelineEntry {
   note?: string;
   candidateId: string;
 }
+
+// assessments
+
+// Params for dashboard/listing endpoint
+export type AssessmentDashboardItem = Assessment & {
+  questionsCount: number;
+  responsesCount: number;
+};
+
+export type AssessmentStatus = "active" | "inactive";
+
+export interface Assessment {
+  id: string;
+  jobId: Job["id"] | string;
+  title: string;
+  status: AssessmentStatus;
+  createdAt: string;
+  questions: AssessmentQuestion[];
+}
+
+export type AssessmentQuestionType =
+  | "single-choice"
+  | "multi-choice"
+  | "short-text"
+  | "long-text"
+  | "numeric"
+  | "file-upload";
+
+export interface AssessmentQuestion {
+  id: string;
+  type: AssessmentQuestionType;
+  label: string;
+  options?: string[];
+  required?: boolean;
+  min?: number;
+  max?: number;
+  maxLength?: number;
+  condition?: { questionId: string; value: any };
+}
+
+export interface AssessmentResponse {
+  id: string;
+  assessmentId: string;
+  candidateId: string;
+  answers: Record<string, any>; // questionId -> answer
+  submittedAt: string;
+}

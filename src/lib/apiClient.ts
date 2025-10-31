@@ -1,5 +1,8 @@
 import api from "./axios";
 import {
+  Assessment,
+  AssessmentDashboardItem,
+  AssessmentResponse,
   Candidate,
   CandidateStage,
   CandidateTimelineEntry,
@@ -56,4 +59,27 @@ export const candidatesApi = {
     api.get<{ timeline: CandidateTimelineEntry[] }>(
       `/candidates/${id}/timeline`
     ),
+};
+
+export const assessmentsApi = {
+  // GET /assessments (dashboard listing)
+  getAssessments: () => api.get<AssessmentDashboardItem[]>("/assessments"),
+
+  // GET /assessments/:jobId (get assessment builder for a job)
+  getAssessmentByJobId: (jobId: string) =>
+    api.get<Assessment>(`/assessments/${jobId}`),
+
+  // PUT /assessments/:jobId (create or update assessment for a job)
+  putAssessment: (jobId: string, assessment: Partial<Assessment>) =>
+    api.put<Assessment>(`/assessments/${jobId}`, assessment),
+
+  // POST /assessments/:jobId/submit (submit a candidate's response)
+  submitAssessmentResponse: (
+    jobId: string,
+    data: { candidateId: string; answers: Record<string, any> }
+  ) => api.post<AssessmentResponse>(`/assessments/${jobId}/submit`, data),
+
+  // DELETE /assessments/:id (delete an assessment)
+  deleteAssessment: (assessmentId: string) =>
+    api.delete<{ success: boolean }>(`/assessments/${assessmentId}`),
 };

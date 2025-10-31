@@ -1,4 +1,10 @@
-import { Candidate, CandidateTimelineEntry, Job } from "@/types/types";
+import {
+  Candidate,
+  CandidateTimelineEntry,
+  Job,
+  Assessment,
+  AssessmentResponse,
+} from "@/types/types";
 import Dexie, { Table } from "dexie";
 
 export class AppDB extends Dexie {
@@ -8,6 +14,8 @@ export class AppDB extends Dexie {
     CandidateTimelineEntry & { candidateId: string },
     number
   >;
+  assessments!: Table<Assessment, string>;
+  assessmentResponses!: Table<AssessmentResponse, string>;
 
   constructor() {
     super("AppDB");
@@ -15,6 +23,8 @@ export class AppDB extends Dexie {
       jobs: "id, title, slug, status, order, createdAt, updatedAt",
       candidates: "id, name, email, stage, jobId, createdAt, updatedAt",
       candidateTimelines: "++id, candidateId, timestamp, stage, by",
+      assessments: "id, jobId, title, status, createdAt",
+      assessmentResponses: "id, assessmentId, candidateId, submittedAt",
     });
   }
 }

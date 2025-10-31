@@ -1,6 +1,6 @@
 import { http, HttpResponse } from "msw";
 import { db } from "../db";
-import { Candidate, Job } from "@/types/types";
+import { Assessment, AssessmentResponse, Candidate, Job } from "@/types/types";
 
 // Artificial delay for realism
 function randomDelay() {
@@ -316,5 +316,114 @@ export const handlers = [
       );
     }
     return HttpResponse.json(candidate);
+  }),
+
+  // ###### assessments handlers ########
+  // GET /assessments
+  http.get("/assessments", async () => {
+    const assessments = await db.assessments.toArray();
+    console.log("Fetched assessments for dashboard:", assessments);
+
+    const enriched = await Promise.all(
+      assessments.map(async (a) => ({
+        ...a,
+        title: a.title || "(Untitled)",
+        jobId: a.jobId || "no-job",
+        status: a.status || "active",
+        createdAt: a.createdAt || new Date().toISOString(),
+        questions: Array.isArray(a.questions) ? a.questions : [],
+        questionsCount: Array.isArray(a.questions) ? a.questions.length : 0,
+        responsesCount: 0, // Or real count if you want
+      }))
+    );
+    return HttpResponse.json(enriched);
+  }),
+
+  // GET /assessments/:jobId
+  http.get("/assessments/:jobId", async ({ params }) => {
+    const jobId = params.jobId as string;
+    const assessment = await db.assessments.where({ jobId }).first();
+    if (!assessment) {
+      return HttpResponse.json(
+        { message: "Assessment not found" },
+        { status: 404 }
+      );
+    }
+    return HttpResponse.json(assessment);
+  }),
+
+  // PUT /assessments/:jobId (create or update assessment for a job)
+  http.put("/assessments/:jobId", async ({ params, request }) => {
+    const jobId = params.jobId as string;
+    const data = (await request.json()) as Partial<Assessment>;
+
+    let assessment = await db.assessments.where({ jobId }).first();
+
+    if (assessment) {
+      // Update
+      await db.assessments.update(assessment.id, {
+        ...assessment,
+        ...data,
+        jobId,
+      });
+      const updated = await db.assessments.get(assessment.id);
+      if (!updated) {
+        return HttpResponse.json(
+          { message: "Assessment not found" },
+          { status: 404 }
+        );
+      }
+      return HttpResponse.json(updated);
+    } else {
+      // Create
+      const now = new Date().toISOString();
+      const id = crypto.randomUUID();
+      const newAssessment: Assessment = {
+        ...data,
+        id,
+        jobId,
+        createdAt: now,
+        status: "active",
+        questions: data.questions ?? [],
+        title: data.title ?? "",
+      } as Assessment;
+      await db.assessments.add(newAssessment);
+      return HttpResponse.json(newAssessment);
+    }
+  }),
+
+  // POST /assessments/:jobId/submit (store response locally)
+  http.post("/assessments/:jobId/submit", async ({ params, request }) => {
+    const jobId = params.jobId as string;
+    const body = (await request.json()) as {
+      candidateId: string;
+      answers: any;
+    };
+    const { candidateId, answers } = body;
+    const assessment = await db.assessments.where({ jobId }).first();
+    if (!assessment) {
+      return HttpResponse.json(
+        { message: "Assessment not found" },
+        { status: 404 }
+      );
+    }
+    const response: AssessmentResponse = {
+      id: crypto.randomUUID(),
+      assessmentId: assessment.id,
+      candidateId,
+      answers,
+      submittedAt: new Date().toISOString(),
+    };
+    await db.assessmentResponses.add(response);
+    return HttpResponse.json(response, { status: 201 });
+  }),
+
+  // (Optional) DELETE /assessments/:id
+  http.delete("/assessments/:id", async ({ params }) => {
+    const id = params.id as string;
+    await db.assessments.delete(id);
+    // Optionally, delete responses as well
+    await db.assessmentResponses.where("assessmentId").equals(id).delete();
+    return HttpResponse.json({ success: true });
   }),
 ];

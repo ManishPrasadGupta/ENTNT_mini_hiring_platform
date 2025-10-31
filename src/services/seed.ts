@@ -1,5 +1,7 @@
 import { db } from "./db";
 import {
+  Assessment,
+  AssessmentQuestion,
   Candidate,
   CandidateStage,
   Job,
@@ -55,6 +57,7 @@ export async function seedJobsIfEmpty() {
 }
 
 export async function seedCandidates(count = 1000) {
+  const jobs = await db.jobs.toArray();
   const stages: CandidateStage[] = [
     "applied",
     "screen",
@@ -72,7 +75,8 @@ export async function seedCandidates(count = 1000) {
       name: faker.person.fullName(),
       email: faker.internet.email(),
       stage,
-      jobId: faker.string.uuid(),
+      //  jobId: faker.string.uuid(),
+      jobId: faker.helpers.arrayElement<Job>(jobs).id,
       phone: faker.phone.number(),
       resume: "",
       notes: "",
@@ -82,4 +86,121 @@ export async function seedCandidates(count = 1000) {
   }
   await db.candidates.bulkAdd(candidates);
   console.log(`${count} candidates seeded.`);
+}
+
+//assessments
+
+// Generate a random question of various types
+function randomQuestionType(): AssessmentQuestion {
+  const types: AssessmentQuestion["type"][] = [
+    "single-choice",
+    "multi-choice",
+    "short-text",
+    "long-text",
+    "numeric",
+    "file-upload",
+  ];
+  const type = faker.helpers.arrayElement(types);
+
+  const q: AssessmentQuestion = {
+    id: faker.string.uuid(),
+    label: faker.lorem.sentence(),
+    type,
+    required: faker.datatype.boolean(),
+  };
+
+  if (type === "single-choice" || type === "multi-choice") {
+    q.options = faker.helpers.uniqueArray(
+      () => faker.word.noun(),
+      faker.number.int({ min: 3, max: 6 })
+    );
+  }
+  if (type === "numeric") {
+    q.min = faker.number.int({ min: 0, max: 10 });
+    q.max = q.min + faker.number.int({ min: 10, max: 100 });
+  }
+  if (type === "short-text" || type === "long-text") {
+    q.maxLength = faker.number.int({ min: 20, max: 200 });
+  }
+  if (Math.random() < 0.1) {
+    q.condition = {
+      questionId: "", // will be set later
+      value: faker.word.noun(),
+    };
+  }
+  return q;
+}
+
+/**
+ * Generate a full assessment with at least 10 questions.
+ */
+function generateAssessment(job: Job, title: string): Assessment {
+  const questions = Array.from(
+    { length: 10 + faker.number.int(5) },
+    randomQuestionType
+  );
+
+  questions.forEach((q, idx) => {
+    if (q.condition && idx > 0) {
+      q.condition.questionId = questions[0].id;
+    }
+  });
+
+  // Always provide valid fields
+  return {
+    id: faker.string.uuid(),
+    jobId: job.id as string,
+    title: title || "Untitled Assessment",
+    status: "active",
+    createdAt: faker.date.past().toISOString(),
+    questions: questions || [],
+  };
+}
+
+export async function seedAssessments() {
+  const existing = await db.assessments.count();
+  if (existing > 0) {
+    console.log("Assessments already seeded.");
+    return;
+  }
+  let jobs = await db.jobs.toArray();
+  if (jobs.length < 3) {
+    jobs = [];
+    for (let i = 0; i < 3; i++) {
+      const jobTitle = faker.person.jobTitle();
+      console.log(`Seeding job: ${jobTitle}`);
+      jobs.push({
+        id: faker.string.uuid(),
+        title: jobTitle,
+        slug: faker.helpers.slugify(jobTitle).toLowerCase(),
+        status: "active",
+        tags: [],
+        order: i,
+        description: faker.lorem.paragraph(),
+        requirements: [faker.lorem.sentence()],
+        location: faker.location.city(),
+        type: faker.helpers.arrayElement(jobTypes),
+        createdAt: faker.date.past().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+    }
+    await db.jobs.bulkAdd(jobs);
+  }
+
+  // Seed assessments
+  const assessmentTitles = [
+    "AI Assessment",
+    "Data Analytics Assessment",
+    "Dev Assessment",
+  ];
+
+  for (let i = 0; i < 3; i++) {
+    const assessment = generateAssessment(jobs[i], assessmentTitles[i]);
+    await db.assessments.add(assessment);
+  }
+}
+
+// If running directly...
+if (typeof window !== "undefined") {
+  seedAssessments().then(() => console.log("Seeded assessments"));
 }
